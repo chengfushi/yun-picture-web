@@ -27,6 +27,10 @@
               </ASpace>
               <template #overlay>
                 <a-menu>
+                  <a-menu-item @click="doProfile">
+                    <UserOutlined />
+                    个人资料
+                  </a-menu-item>
                   <a-menu-item @click="doLogout">
                     <LogoutOutlined />
                     退出登录
@@ -122,6 +126,11 @@ const doLogout = async () => {
   } else {
     message.error('退出登录失败，' + res.data.message)
   }
+}
+
+// 用户个人资料
+const doProfile = () => {
+  router.push('/user/profile')
 }
 </script>
 
