@@ -35,9 +35,9 @@ import { h, ref } from 'vue'
 import { HomeOutlined } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
 import type { MenuProps } from 'ant-design-vue'
-import {userLoginUserStore} from '@/stores/userLoginUserStore'
+import {useLoginUserStore} from '@/stores/useLoginUserStore'
 
-const loginUserStore = userLoginUserStore()
+const loginUserStore = useLoginUserStore()
 
 const items = ref<MenuProps['items']>([
   {

@@ -6,9 +6,9 @@
 
 <script setup lang="ts">
 import BasicLayout from './layous/BasicLayout.vue'
-import {userLoginUserStore} from '@/stores/userLoginUserStore'
+import {useLoginUserStore} from '@/stores/useLoginUserStore'
 
-const loginUserStore = userLoginUserStore()
+const loginUserStore = useLoginUserStore()
 loginUserStore.fetchLoginUser()
 </script>
 <style>
