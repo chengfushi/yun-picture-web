@@ -22,7 +22,13 @@
           <div v-if="loginUserStore.loginUser.id">
             <a-dropdown>
               <ASpace>
-                <a-avatar :src="loginUserStore.loginUser.userAvatar" />
+                <a-avatar
+                  v-if="loginUserStore.loginUser.userAvatar"
+                  :src="loginUserStore.loginUser.userAvatar"
+                />
+                <a-avatar v-else style="background-color: #1890ff">
+                  {{ loginUserStore.loginUser.userName?.charAt(0) || 'U' }}
+                </a-avatar>
                 {{ loginUserStore.loginUser.userName ?? '无名' }}
               </ASpace>
               <template #overlay>
@@ -39,6 +45,7 @@
               </template>
             </a-dropdown>
           </div>
+
           <div v-else>
             <a-button type="primary" href="/user/login">登录</a-button>
           </div>
