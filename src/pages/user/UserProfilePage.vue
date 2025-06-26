@@ -2,14 +2,16 @@
   <div class="userProfilePage">
     <a-card :bordered="false" class="profile-card">
       <div class="profile-header">
-        <a-avatar :size="120" class="user-avatar">
+        <div class="custom-avatar" :style="{ width: '120px', height: '120px', borderRadius: '50%' }">
           <template v-if="userData.userAvatar">
-            <a-image :src="userData.userAvatar" :width="120" />
+            <a-image :src="userData.userAvatar" :width="120" style="border-radius: 50%" />
           </template>
           <template v-else>
-            {{ userData.userName?.charAt(0) || 'U' }}
+            <div style="width: 100%; height: 100%; background-color: #1890ff; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 36px;">
+              {{ userData.userName?.charAt(0) || 'U' }}
+            </div>
           </template>
-        </a-avatar>
+        </div>
         <div class="profile-info">
           <h2>{{ userData.userName }}</h2>
           <p class="account-info">@{{ userData.userAccount }}</p>
@@ -58,6 +60,21 @@
         <a-form-item label="头像URL">
           <a-input v-model:value="updateUserForm.userAvatar" placeholder="请输入头像URL" />
         </a-form-item>
+        <!--        上传头像-->
+        <a-upload
+          list-type="picture-card"
+          :show-upload-list="false"
+          :custom-request="handleUpload"
+          :before-upload="beforeUpload"
+        >
+          <img v-if="picture?.url" :src="picture?.url" alt="avatar" />
+          <div v-else>
+            <loading-outlined v-if="loading"></loading-outlined>
+            <plus-outlined v-else></plus-outlined>
+            <div class="ant-upload-text">点击或拖拽上传图片</div>
+          </div>
+        </a-upload>
+
         <a-form-item label="个人简介">
           <a-textarea
             v-model:value="updateUserForm.userProfile"
@@ -72,10 +89,12 @@
 
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
-import { message } from 'ant-design-vue'
+import { message, type UploadProps } from 'ant-design-vue'
 import { getLoginUserUsingGet } from '@/api/userController'
 import router from '@/router'
 import { updateUserSelfUsingPost } from '@/api/userController'
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import { uploadPictureUsingPost } from '@/api/pictureController'
 
 const editModalVisible = ref(false)
 const userData = ref({
@@ -117,11 +136,12 @@ const fetchUserProfile = async () => {
   }
 }
 
+const tempPicture = ref<string | null>(null) // 存储上传成功的临时图片URL
 const showEditModal = () => {
   // Fill the form with current user data
   updateUserForm.id = userData.value.id
   updateUserForm.userName = userData.value.userName || ''
-  updateUserForm.userAvatar = userData.value.userAvatar || ''
+  updateUserForm.userAvatar = tempPicture.value || userData.value.userAvatar || ''
   updateUserForm.userProfile = userData.value.userProfile || ''
   editModalVisible.value = true
 }
@@ -148,6 +168,62 @@ const handleCancel = () => {
 
 const goManage = () => {
   router.push('/admin/user')
+}
+interface Props {
+  picture?: API.PictureVO
+  spaceId?: number
+  onSuccess?: (newPicture: API.PictureVO) => void
+}
+
+const props = defineProps<Props>()
+
+/**
+ * 上传图片
+ * @param file
+ */
+const handleUpload = async ({ file }: any) => {
+  loading.value = true
+  try {
+    const params: API.PictureUploadRequest = props.picture ? { id: props.picture.id } : {}
+    params.spaceId = props.spaceId
+    const res = await uploadPictureUsingPost(params, {}, file)
+    if (res.data.code === 0 && res.data.data) {
+      const { url } = res.data.data // 提取URL
+      message.success('图片上传成功')
+
+      // 1. 更新表单中的头像URL
+      updateUserForm.userAvatar = url
+
+      // 2. 更新临时图片预览（用于编辑模态框）
+      tempPicture.value = url
+    } else {
+      message.error('图片上传失败，' + res.data.message)
+    }
+  } catch (error) {
+    console.error('图片上传失败', error)
+    message.error('图片上传失败，' + error.message)
+  }
+  loading.value = false
+}
+
+const loading = ref<boolean>(false)
+
+/**
+ * 上传前的校验
+ * @param file
+ */
+const beforeUpload = (file: UploadProps['fileList'][number]) => {
+  // 校验图片格式
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+  if (!isJpgOrPng) {
+    message.error('不支持上传该格式的图片，推荐 jpg 或 png')
+  }
+  // 校验图片大小
+  const isLt2M = file.size / 1024 / 1024 < 2
+  if (!isLt2M) {
+    message.error('不能上传超过 2M 的图片')
+  }
+  return isJpgOrPng && isLt2M
 }
 
 onMounted(() => {

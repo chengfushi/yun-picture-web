@@ -24,19 +24,16 @@ import GlobalHeader from '@/components/GlobalHeader.vue'
   color: unset;
   padding-inline: 20px;
 }
+
 #basicLayout .footer {
   background: #efefef;
   padding: 16px;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
   text-align: center;
+  /* 不需要再设置position和bottom */
 }
 
-#basicLayout.content {
+#basicLayout .content {
   background: linear-gradient(to right, #fefefe, #fff);
-  margin-bottom: 28px;
   padding: 20px;
 }
 </style>
