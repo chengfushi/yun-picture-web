@@ -82,6 +82,11 @@ const originItems = [
     title: '用户登录',
   },
   {
+    key: '/add_picture',
+    label: '上传图片',
+    title: '上传图片',
+  },
+  {
     key: 'others',
     label: h('a', { href: 'https://chengfushi.blog.csdn.net', target: '_blank' }, '个人博客'),
     title: '个人博客',
