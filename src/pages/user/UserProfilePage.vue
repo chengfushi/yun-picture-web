@@ -2,12 +2,27 @@
   <div class="userProfilePage">
     <a-card :bordered="false" class="profile-card">
       <div class="profile-header">
-        <div class="custom-avatar" :style="{ width: '120px', height: '120px', borderRadius: '50%' }">
+        <div
+          class="custom-avatar"
+          :style="{ width: '120px', height: '120px', borderRadius: '50%' }"
+        >
           <template v-if="userData.userAvatar">
             <a-image :src="userData.userAvatar" :width="120" style="border-radius: 50%" />
           </template>
           <template v-else>
-            <div style="width: 100%; height: 100%; background-color: #1890ff; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 36px;">
+            <div
+              style="
+                width: 100%;
+                height: 100%;
+                background-color: #1890ff;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: white;
+                font-size: 36px;
+              "
+            >
               {{ userData.userName?.charAt(0) || 'U' }}
             </div>
           </template>
@@ -186,10 +201,11 @@ const handleUpload = async ({ file }: any) => {
   try {
     const params: API.PictureUploadRequest = props.picture ? { id: props.picture.id } : {}
     params.spaceId = props.spaceId
+    params.tags = props.picture?.tags || ['头像']
     const res = await uploadPictureUsingPost(params, {}, file)
     if (res.data.code === 0 && res.data.data) {
       const { url } = res.data.data // 提取URL
-      message.success('图片上传成功')
+      message.success('头像上传成功')
 
       // 1. 更新表单中的头像URL
       updateUserForm.userAvatar = url
@@ -197,11 +213,11 @@ const handleUpload = async ({ file }: any) => {
       // 2. 更新临时图片预览（用于编辑模态框）
       tempPicture.value = url
     } else {
-      message.error('图片上传失败，' + res.data.message)
+      message.error('头像上传失败，' + res.data.message)
     }
   } catch (error) {
-    console.error('图片上传失败', error)
-    message.error('图片上传失败，' + error.message)
+    console.error('头像上传失败', error)
+    message.error('头像上传失败，' + error.message)
   }
   loading.value = false
 }
