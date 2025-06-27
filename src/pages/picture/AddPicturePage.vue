@@ -4,7 +4,16 @@
       {{ route.query?.id ? '修改图片' : '创建图片' }}
     </h2>
 
-    <PictureUpload :picture="picture" :onSuccess="onSuccess" />
+    <!-- 选择上传方式 -->
+    <a-tabs v-model:activeKey="uploadType"
+      >>
+      <a-tab-pane key="file" tab="文件上传">
+        <PictureUpload :picture="picture" :onSuccess="onSuccess" />
+      </a-tab-pane>
+      <a-tab-pane key="url" tab="URL 上传" force-render>
+        <UrlPictureUpload :picture="picture" :onSuccess="onSuccess" />
+      </a-tab-pane>
+    </a-tabs>
 
     <a-form v-if="picture" layout="vertical" :model="pictureForm" @finish="handleSubmit">
       <a-form-item label="名称" name="name">
@@ -37,7 +46,9 @@
         />
       </a-form-item>
       <a-form-item>
-        <a-button  type="primary" html-type="submit" style="width: 100%">{{ route.query?.id ? '修改图片' : '创建图片' }}</a-button>
+        <a-button type="primary" html-type="submit" style="width: 100%">{{
+          route.query?.id ? '修改图片' : '创建图片'
+        }}</a-button>
       </a-form-item>
     </a-form>
   </div>
@@ -48,8 +59,13 @@ import PictureUpload from '@/components/PictureUpload.vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 
 import { useRoute, useRouter } from 'vue-router'
-import { editPictureUsingPost, getPictureVoUsingGet, listPictureTagCategoryUsingGet } from '@/api/pictureController'
+import {
+  editPictureUsingPost,
+  getPictureVoUsingGet,
+  listPictureTagCategoryUsingGet,
+} from '@/api/pictureController'
 import { message } from 'ant-design-vue'
+import UrlPictureUpload from '@/components/UrlPictureUpload.vue'
 
 const route = useRoute()
 
@@ -116,7 +132,6 @@ const getTagCategoryOptions = async () => {
     message.error('加载选项失败，' + res.data.message)
   }
 }
-
 
 // 获取老数据
 const getOldPicture = async () => {
