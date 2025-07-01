@@ -117,7 +117,6 @@ const doDelete = async (picture, e) => {
     message.error('删除失败')
   }
 }
-
 </script>
 
 <style scoped></style>

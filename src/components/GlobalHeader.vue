@@ -34,8 +34,14 @@
               <template #overlay>
                 <a-menu>
                   <a-menu-item @click="doProfile">
-                    <UserOutlined />
+                    <IdcardOutlined />
                     个人资料
+                  </a-menu-item>
+                  <a-menu-item>
+                    <router-link to="/my_space">
+                      <UserOutlined />
+                      我的空间
+                    </router-link>
                   </a-menu-item>
                   <a-menu-item @click="doLogout">
                     <LogoutOutlined />
@@ -56,7 +62,7 @@
 </template>
 <script lang="ts" setup>
 import { computed, h, ref } from 'vue'
-import { HomeOutlined } from '@ant-design/icons-vue'
+import { HomeOutlined ,UserOutlined,LogoutOutlined,IdcardOutlined} from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
 import { type MenuProps, message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
@@ -80,6 +86,11 @@ const originItems = [
     key: '/admin/picture',
     label: '图片管理',
     title: '图片管理',
+  },
+  {
+    key: '/admin/space',
+    label: '空间管理',
+    title: '空间管理',
   },
   {
     key: '/add_picture',

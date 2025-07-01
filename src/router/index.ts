@@ -7,6 +7,10 @@ import AddPicturePage from '@/pages/picture/AddPicturePage.vue'
 import PictureManagePage from '@/pages/admin/PictureManagePage.vue'
 import PictureDetailPage from '@/pages/picture/PictureDetailPage.vue'
 import AddPictureBatchPage from '@/pages/picture/AddPictureBatchPage.vue'
+import SpaceManagerPage from '@/pages/admin/SpaceManagerPage.vue'
+import AddSpacePage from '@/pages/space/AddSpacePage.vue'
+import MySpacePage from '@/pages/space/MySpacePage.vue'
+import SpaceDetailPage from '@/pages/space/SpaceDetailPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,9 +41,19 @@ const router = createRouter({
       component: PictureManagePage,
     },
     {
+      path: '/admin/space',
+      name: 'admin-space',
+      component: SpaceManagerPage,
+    },
+    {
       path: '/add_picture',
       name: 'add-picture',
       component: AddPicturePage,
+    },
+    {
+      path: '/add_space',
+      name: 'add-space',
+      component: AddSpacePage,
     },
     {
       path: '/add_picture/batch',
@@ -51,7 +65,19 @@ const router = createRouter({
       name: '图片详情',
       component: PictureDetailPage,
       props: true,
-    }
+    },
+    {
+      path: '/my_space',
+      name: '我的空间',
+      component: MySpacePage,
+    },
+    {
+      path: '/space/:id',
+      name: '空间详情',
+      component: SpaceDetailPage,
+      props: true,
+    },
+
 
   ],
 })

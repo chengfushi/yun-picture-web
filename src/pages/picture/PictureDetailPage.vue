@@ -17,6 +17,9 @@
                 <div>{{ picture.user?.userName }}</div>
               </a-space>
             </a-descriptions-item>
+            <a-descriptions-item label="空间">
+              <div>{{ picture.spaceId ?? '公共图片' }}</div>
+            </a-descriptions-item>
             <a-descriptions-item label="名称">
               {{ picture.name ?? '未命名' }}
             </a-descriptions-item>
