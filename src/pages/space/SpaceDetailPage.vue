@@ -23,7 +23,12 @@
     </a-flex>
 
     <!-- 图片列表 -->
-    <PictureList :dataList="dataList" :loading="loading" />
+    <!-- 图片列表 -->
+    <PictureList :dataList="dataList"
+                 :loading="loading"
+                 showOp
+                 :onReload="fetchData"
+    />
     <a-pagination
       style="text-align: right"
       v-model:current="searchParams.current"

@@ -30,10 +30,19 @@
               </template>
             </a-card-meta>
             <template v-if="showOp" #actions>
-              <ShareAltOutlined @click="(e) => doShare(picture, e)" />
               <SearchOutlined @click="(e) => doSearch(picture, e)" />
               <EditOutlined v-if="canEdit" @click="(e) => doEdit(picture, e)" />
               <DeleteOutlined v-if="canDelete" @click="(e) => doDelete(picture, e)" />
+            </template>
+            <template v-if = "showOp" #actions>
+              <a-space @click="(e) => doEdit(picture, e)">
+                <edit-outlined />
+                编辑
+              </a-space>
+              <a-space @click="(e) => doDelete(picture, e)">
+                <delete-outlined />
+                删除
+              </a-space>
             </template>
           </a-card>
         </a-list-item>
@@ -48,11 +57,11 @@ import {
   DeleteOutlined,
   EditOutlined,
   SearchOutlined,
-  ShareAltOutlined,
 } from '@ant-design/icons-vue'
 import { deletePictureUsingPost } from '@/api/pictureController'
 import { message } from 'ant-design-vue'
 import { ref } from 'vue'
+
 
 interface Props {
   dataList?: API.PictureVO[]

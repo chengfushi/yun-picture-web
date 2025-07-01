@@ -98,6 +98,11 @@ const originItems = [
     title: '上传图片',
   },
   {
+    key: '/add_space',
+    label: '创建空间',
+    title: '创建空间',
+  },
+  {
     key: 'others',
     label: h('a', { href: 'https://chengfushi.blog.csdn.net', target: '_blank' }, '个人博客'),
     title: '个人博客',
