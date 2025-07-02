@@ -22,13 +22,10 @@
       </a-space>
     </a-flex>
 
+    <!-- 搜索表单 -->
+    <PictureSearchForm class="search-form" :onSearch="onSearch" />
     <!-- 图片列表 -->
-    <!-- 图片列表 -->
-    <PictureList :dataList="dataList"
-                 :loading="loading"
-                 showOp
-                 :onReload="fetchData"
-    />
+    <PictureList class="picture-list" :dataList="dataList" :loading="loading" showOp :onReload="fetchData" />
     <a-pagination
       style="text-align: right"
       v-model:current="searchParams.current"
@@ -51,7 +48,6 @@
         >
           <a-form :model="editSpaceForm" layout="vertical">
             <a-form-item label="空间名称">
-              <!-- 原“用户名”是笔误，应该是空间名称 -->
               <a-input v-model:value="editSpaceForm.spaceName" placeholder="请输入空间名称" />
             </a-form-item>
           </a-form>
@@ -68,7 +64,7 @@ import { onMounted, reactive, ref, toRefs } from 'vue'
 import { message } from 'ant-design-vue'
 import { formatSize } from '@/utils'
 import PictureList from '@/components/PictureList.vue'
-import { updateUserSelfUsingPost } from '@/api/userController'
+import PictureSearchForm from '@/components/PictureSearchForm.vue'
 
 const props = defineProps<{
   id: string | number
@@ -86,7 +82,6 @@ const showEditModal = () => {
   editSpaceForm.spaceName = space.value.spaceName
   editModalVisible.value = true
 }
-
 
 // 获取空间详情
 const fetchSpaceDetail = async () => {
@@ -114,7 +109,7 @@ const total = ref(0)
 const loading = ref(true)
 
 // 搜索条件
-const searchParams = reactive<API.PictureQueryRequest>({
+const searchParams = ref<API.PictureQueryRequest>({
   current: 1,
   pageSize: 12,
   sortField: 'createTime',
@@ -123,8 +118,18 @@ const searchParams = reactive<API.PictureQueryRequest>({
 
 // 分页参数
 const onPageChange = (page, pageSize) => {
-  searchParams.current = page
-  searchParams.pageSize = pageSize
+  searchParams.value.current = page
+  searchParams.value.pageSize = pageSize
+  fetchData()
+}
+
+// 搜索
+const onSearch = (newSearchParams: API.PictureQueryRequest) => {
+  searchParams.value = {
+    ...searchParams.value,
+    ...newSearchParams,
+    current: 1,
+  }
   fetchData()
 }
 
@@ -134,7 +139,7 @@ const fetchData = async () => {
   // 转换搜索参数
   const params = {
     spaceId: props.id,
-    ...searchParams,
+    ...searchParams.value,
   }
   const res = await listPictureVoByPageUsingPost(params)
   if (res.data.data) {
@@ -175,4 +180,11 @@ const handleCancel = () => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+#spaceDetailPage.search-form {
+  margin-bottom: 16px;
+}
+.picture-list{
+  margin-top: 24px;
+}
+</style>
