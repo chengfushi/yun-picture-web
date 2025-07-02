@@ -148,6 +148,9 @@ const doDelete = async () => {
 const doDownload = () => {
   downloadImage(picture.value.url)
 }
+
+
+
 </script>
 
 <style scoped>

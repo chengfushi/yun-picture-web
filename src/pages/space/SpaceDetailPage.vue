@@ -24,8 +24,20 @@
 
     <!-- 搜索表单 -->
     <PictureSearchForm class="search-form" :onSearch="onSearch" />
+
+    <!-- 按颜色搜索 -->
+    <a-form-item label="按颜色搜索" style="margin-top: 16px">
+      <color-picker format="hex" @pureColorChange="onColorChange" />
+    </a-form-item>
+
     <!-- 图片列表 -->
-    <PictureList class="picture-list" :dataList="dataList" :loading="loading" showOp :onReload="fetchData" />
+    <PictureList
+      class="picture-list"
+      :dataList="dataList"
+      :loading="loading"
+      showOp
+      :onReload="fetchData"
+    />
     <a-pagination
       style="text-align: right"
       v-model:current="searchParams.current"
@@ -58,13 +70,21 @@
 </template>
 
 <script setup lang="ts">
-import { listPictureVoByPageUsingPost } from '@/api/pictureController'
+import { listPictureVoByPageUsingPost, searchPictureByColorUsingPost } from '@/api/pictureController'
 import { getSpaceVoByIdUsingGet, editSpaceUsingPost } from '@/api/spaceController'
 import { onMounted, reactive, ref, toRefs } from 'vue'
 import { message } from 'ant-design-vue'
 import { formatSize } from '@/utils'
 import PictureList from '@/components/PictureList.vue'
 import PictureSearchForm from '@/components/PictureSearchForm.vue'
+import { ColorPicker } from 'vue3-colorpicker'
+import 'vue3-colorpicker/style.css'
+
+defineOptions({
+  components: {
+    ColorPicker
+  }
+})
 
 const props = defineProps<{
   id: string | number
@@ -178,13 +198,28 @@ const handleEdit = async () => {
 const handleCancel = () => {
   editModalVisible.value = false
 }
+
+const onColorChange = async (color: string) => {
+  const res = await searchPictureByColorUsingPost({
+    picColor: color,
+    spaceId: props.id,
+  })
+  if (res.data.code === 0 && res.data.data) {
+    const data = res.data.data ?? [];
+    dataList.value = data;
+    total.value = data.length;
+  } else {
+    message.error('获取数据失败，' + res.data.message)
+  }
+}
+
 </script>
 
 <style scoped>
 #spaceDetailPage.search-form {
   margin-bottom: 16px;
 }
-.picture-list{
+.picture-list {
   margin-top: 24px;
 }
 </style>
