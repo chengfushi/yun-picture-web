@@ -53,10 +53,28 @@
           allow-clear
         />
       </a-form-item>
-      <a-form-item>
-        <a-button type="primary" html-type="submit" style="width: 100%">创建</a-button>
-      </a-form-item>
+      <div
+        v-if="picture"
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+        "
+      >
+        <a-button :icon="h(EditOutlined)" @click="doEditPicture" style="flex: 1; margin-right: 8px"
+          >编辑图片</a-button
+        >
+        <a-button type="primary" html-type="submit" style="flex: 1">创建</a-button>
+      </div>
     </a-form>
+    <ImageCropper
+      ref="imageCropperRef"
+      :imageUrl="picture?.url"
+      :picture="picture"
+      :spaceId="spaceId"
+      :onSuccess="onCropSuccess"
+    />
   </div>
 </template>
 
@@ -72,6 +90,8 @@ import {
 import { useRoute, useRouter } from 'vue-router'
 import UrlPictureUpload from '@/components/UrlPictureUpload.vue'
 import { getSpaceVoByIdUsingGet } from '@/api/spaceController'
+import { EditOutlined } from '@ant-design/icons-vue'
+import ImageCropper from '@/components/ImageCropper.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -194,16 +214,26 @@ const fetchSpace = async () => {
 watchEffect(() => {
   fetchSpace()
 })
+
+// 图片编辑弹窗引用
+const imageCropperRef = ref()
+
+// 编辑图片
+const doEditPicture = () => {
+  if (imageCropperRef.value) {
+    imageCropperRef.value.openModal()
+  }
+}
+
+// 编辑成功事件
+const onCropSuccess = (newPicture: API.PictureVO) => {
+  picture.value = newPicture
+}
 </script>
 
 <style scoped>
 #addPicturePage {
   max-width: 720px;
   margin: 0 auto;
-}
-
-#addPicturePage .edit-bar {
-  text-align: center;
-  margin: 16px 0;
 }
 </style>
