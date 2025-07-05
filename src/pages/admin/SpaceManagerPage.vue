@@ -7,27 +7,44 @@
       </a-space>
     </a-flex>
     <div style="margin-bottom: 16px" />
-    <!-- 搜索表单 -->
-    <a-form layout="inline" :model="searchParams" @finish="doSearch">
-      <a-form-item label="空间名称">
-        <a-input v-model:value="searchParams.spaceName" placeholder="请输入空间名称" allow-clear />
-      </a-form-item>
-      <a-form-item name="spaceLevel" label="空间级别">
-        <a-select
-          v-model:value="searchParams.spaceLevel"
-          style="min-width: 180px"
-          placeholder="请选择空间级别"
-          :options="SPACE_LEVEL_OPTIONS"
-          allow-clear
-        />
-      </a-form-item>
-      <a-form-item label="用户 id">
-        <a-input v-model:value="searchParams.userId" placeholder="请输入用户 id" allow-clear />
-      </a-form-item>
-      <a-form-item>
-        <a-button type="primary" html-type="submit">搜索</a-button>
-      </a-form-item>
-    </a-form>
+    <a-flex align="middle">
+      <!-- 搜索表单区域，设置 flex: 1 占满剩余空间，可根据需求调整 -->
+      <a-form layout="inline" :model="searchParams" @finish="doSearch" style="flex: 1">
+        <a-form-item label="空间名称">
+          <a-input
+            v-model:value="searchParams.spaceName"
+            placeholder="请输入空间名称"
+            allow-clear
+          />
+        </a-form-item>
+        <a-form-item name="spaceLevel" label="空间级别">
+          <a-select
+            v-model:value="searchParams.spaceLevel"
+            style="min-width: 180px"
+            placeholder="请选择空间级别"
+            :options="SPACE_LEVEL_OPTIONS"
+            allow-clear
+          />
+        </a-form-item>
+        <a-form-item label="用户 id">
+          <a-input v-model:value="searchParams.userId" placeholder="请输入用户 id" allow-clear />
+        </a-form-item>
+        <a-form-item>
+          <a-button type="primary" html-type="submit">搜索</a-button>
+        </a-form-item>
+      </a-form>
+      <!-- 按钮区域 -->
+      <a-space>
+        <a-button type="primary" href="/add_space" target="_blank">+ 创建空间</a-button>
+        <a-button type="primary" ghost href="/space_analyze?queryPublic=1" target="_blank">
+          分析公共图库
+        </a-button>
+        <a-button type="primary" ghost href="/space_analyze?queryAll=1" target="_blank">
+          分析全空间
+        </a-button>
+      </a-space>
+    </a-flex>
+
     <div style="margin-bottom: 16px" />
     <!-- 表格 -->
     <a-table

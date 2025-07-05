@@ -6,6 +6,15 @@
 
       <a-space size="middle">
         <a-button @click="showEditModal"> 修改空间信息 </a-button>
+        <a-button
+          type="primary"
+          ghost
+          :icon="h(BarChartOutlined)"
+          :href="`/space_analyze?spaceId=${id}`"
+          target="_blank"
+        >
+          空间分析
+        </a-button>
 
         <a-button type="primary" :href="`/add_picture?spaceId=${id}`" target="_blank">
           + 创建图片
